@@ -3,24 +3,5 @@
   "outputDirectory": ".next",
   "framework": "nextjs",
   "installCommand": "npm install",
-  "devCommand": "npm run dev",
-  "regions": ["iad1"],
-  "env": {
-    "DATABASE_URL": {
-      "type": "string",
-      "description": "PostgreSQL connection string from Vercel Postgres"
-    },
-    "PAYLOAD_SECRET": {
-      "type": "secret",
-      "description": "Secret key for Payload CMS (minimum 32 characters, generate with: openssl rand -base64 32)"
-    },
-    "NEXT_PUBLIC_SERVER_URL": {
-      "type": "string",
-      "description": "Public URL of your application (e.g., https://your-app.vercel.app)"
-    },
-    "BLOB_READ_WRITE_TOKEN": {
-      "type": "secret",
-      "description": "Vercel Blob storage read/write token (optional, for file uploads)"
-    }
-  }
+  "devCommand": "npm run dev"
 }

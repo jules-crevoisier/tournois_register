@@ -92,6 +92,8 @@ Pour un guide détaillé étape par étape, consultez le fichier **DEPLOYMENT.md
 
 ### Variables d'Environnement Requises
 
+**Note**: Configurez ces variables manuellement dans le Dashboard Vercel (Settings → Environment Variables).
+
 Consultez `.env.example` pour la liste complète. Les essentielles:
 
 ```env

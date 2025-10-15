@@ -74,7 +74,9 @@ DATABASE_URL=postgres://username:password@host:port/database?sslmode=require
 
 ## Étape 4: Configurer les Variables d'Environnement
 
-Allez dans **Settings → Environment Variables** et ajoutez:
+**IMPORTANT**: Les variables d'environnement doivent être configurées manuellement via le Dashboard Vercel (elles ne peuvent pas être définies via `vercel.json`).
+
+Allez dans **Settings → Environment Variables** et ajoutez chaque variable une par une:
 
 ### Variables Requises
 

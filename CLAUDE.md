@@ -192,7 +192,7 @@ openssl rand -base64 32
 
 ### Vercel Deployment
 
-The project is configured for Vercel deployment via `vercel.json`. When deploying:
+**Important**: Le fichier `vercel.json` configure uniquement les commandes de build et l'output directory. Les variables d'environnement DOIVENT être configurées manuellement via le Dashboard Vercel (Settings → Environment Variables), car Vercel ne supporte plus leur déclaration dans `vercel.json`.
 
 #### 1. Create Vercel Postgres Database
 ```bash
@@ -202,7 +202,7 @@ The project is configured for Vercel deployment via `vercel.json`. When deployin
 ```
 
 #### 2. Set Environment Variables in Vercel
-Go to Project Settings → Environment Variables and add:
+**Manually** add in Project Settings → Environment Variables:
 
 - `DATABASE_URL` - From Vercel Postgres (auto-populated if linked)
 - `PAYLOAD_SECRET` - Generate with `openssl rand -base64 32`
