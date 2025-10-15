@@ -47,23 +47,33 @@ export default function RegistrationForm({ tournament }: RegistrationFormProps) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     try {
-      // TODO: Implement actual API call
-      console.log("Submitting team registration:", {
-        tournamentId: tournament.id,
-        teamName,
-        players
+      const response = await fetch('/api/teams', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tournamentId: tournament.id,
+          teamName,
+          players
+        })
       })
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // TODO: Handle success (redirect, show success message, etc.)
-      alert("Équipe inscrite avec succès!")
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to register team')
+      }
+
+      const data = await response.json()
+      console.log("Team registered successfully:", data)
+
+      // Redirect to tournament details page
+      window.location.href = `/tournaments/${tournament.id}`
     } catch (error) {
       console.error("Error submitting registration:", error)
-      alert("Erreur lors de l'inscription. Veuillez réessayer.")
+      alert(error instanceof Error ? error.message : "Erreur lors de l'inscription. Veuillez réessayer.")
     } finally {
       setIsSubmitting(false)
     }

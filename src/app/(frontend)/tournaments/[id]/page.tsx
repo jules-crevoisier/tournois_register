@@ -1,57 +1,48 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import Link from "next/link"
 import { Calendar, Users, Gamepad2, Clock, ArrowLeft } from "lucide-react"
+import { useEffect, useState } from "react"
 
-// Mock data - will be replaced with actual API calls
-const tournament = {
-  id: "1",
-  title: "League of Legends Championship",
-  description: "Join the ultimate League of Legends tournament! Compete against the best teams and prove your skills in this epic championship.",
-  game: "League of Legends",
-  playersPerTeam: 5,
-  maxTeams: 16,
-  startDate: "2024-12-15T10:00:00Z",
-  endDate: "2024-12-15T18:00:00Z",
-  registrationDeadline: "2024-12-10T23:59:59Z",
-  status: "open",
-  image: null,
-  teams: [
-    {
-      id: "1",
-      teamName: "Team Alpha",
-      captain: "John Doe",
-      players: [
-        { playerName: "John Doe", gameUsername: "AlphaLeader", discordUsername: "john#1234" },
-        { playerName: "Jane Smith", gameUsername: "AlphaSupport", discordUsername: "jane#5678" },
-        { playerName: "Bob Johnson", gameUsername: "AlphaADC", discordUsername: "bob#9012" },
-        { playerName: "Alice Brown", gameUsername: "AlphaJungle", discordUsername: "alice#3456" },
-        { playerName: "Charlie Wilson", gameUsername: "AlphaTop", discordUsername: "charlie#7890" },
-      ],
-      registeredAt: "2024-11-01T10:00:00Z",
-      status: "confirmed"
-    },
-    {
-      id: "2",
-      teamName: "Team Beta",
-      captain: "Mike Davis",
-      players: [
-        { playerName: "Mike Davis", gameUsername: "BetaLeader", discordUsername: "mike#1111" },
-        { playerName: "Sarah Lee", gameUsername: "BetaSupport", discordUsername: "sarah#2222" },
-        { playerName: "Tom Wilson", gameUsername: "BetaADC", discordUsername: "tom#3333" },
-        { playerName: "Lisa Garcia", gameUsername: "BetaJungle", discordUsername: "lisa#4444" },
-        { playerName: "David Kim", gameUsername: "BetaTop", discordUsername: "david#5555" },
-      ],
-      registeredAt: "2024-11-02T14:30:00Z",
-      status: "confirmed"
-    },
-  ]
+interface Player {
+  playerName: string
+  gameUsername: string
+  discordUsername: string
+}
+
+interface Team {
+  id: string
+  teamName: string
+  players: Player[]
+  registeredAt: string
+  status: string
+  captain: {
+    id: string
+    email: string
+  }
+}
+
+interface Tournament {
+  id: string
+  title: string
+  description: string
+  game: string
+  playersPerTeam: number
+  maxTeams: number
+  startDate: string
+  endDate: string
+  registrationDeadline: string
+  status: string
+  image: string | null
+  teams: Team[]
 }
 
 const getStatusColor = (status: string) => {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case "open":
       return "bg-green-500"
     case "closed":
@@ -68,7 +59,7 @@ const getStatusColor = (status: string) => {
 }
 
 const getStatusText = (status: string) => {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case "open":
       return "Inscriptions ouvertes"
     case "closed":
@@ -85,7 +76,7 @@ const getStatusText = (status: string) => {
 }
 
 const getTeamStatusColor = (status: string) => {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case "confirmed":
       return "bg-green-500"
     case "pending":
@@ -98,7 +89,7 @@ const getTeamStatusColor = (status: string) => {
 }
 
 const getTeamStatusText = (status: string) => {
-  switch (status) {
+  switch (status.toLowerCase()) {
     case "confirmed":
       return "Confirmée"
     case "pending":
@@ -110,8 +101,73 @@ const getTeamStatusText = (status: string) => {
   }
 }
 
-export default function TournamentDetail({ params: { id } }: { params: { id: string } }) {
-  const canRegister = tournament.status === "open" && tournament.teams.length < tournament.maxTeams
+export default function TournamentDetail({ params }: { params: Promise<{ id: string }> }) {
+  const [tournament, setTournament] = useState<Tournament | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [tournamentId, setTournamentId] = useState<string>("")
+
+  useEffect(() => {
+    params.then(({ id }) => {
+      setTournamentId(id)
+    })
+  }, [params])
+
+  useEffect(() => {
+    if (!tournamentId) return
+
+    const fetchTournament = async () => {
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/tournaments/${tournamentId}`)
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch tournament')
+        }
+
+        const data = await response.json()
+        setTournament(data)
+      } catch (err) {
+        setError("Erreur lors du chargement du tournoi")
+        console.error("Error fetching tournament:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTournament()
+  }, [tournamentId])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !tournament) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle>Erreur</CardTitle>
+            <CardDescription>{error || "Tournoi introuvable"}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild>
+              <Link href="/">Retour à l&apos;accueil</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
+  const canRegister = tournament.status.toLowerCase() === "open" && tournament.teams.length < tournament.maxTeams
   const registrationDeadline = new Date(tournament.registrationDeadline)
   const isRegistrationOpen = registrationDeadline > new Date()
 
@@ -159,24 +215,24 @@ export default function TournamentDetail({ params: { id } }: { params: { id: str
                     <span className="font-medium">Jeu:</span>
                     <span>{tournament.game}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Users className="h-5 w-5 text-gray-500" />
                     <span className="font-medium">Joueurs par équipe:</span>
                     <span>
-                      {tournament.playersPerTeam === 1 
-                        ? "Solo" 
+                      {tournament.playersPerTeam === 1
+                        ? "Solo"
                         : `${tournament.playersPerTeam} joueurs`
                       }
                     </span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Calendar className="h-5 w-5 text-gray-500" />
                     <span className="font-medium">Début:</span>
                     <span>{new Date(tournament.startDate).toLocaleDateString('fr-FR')}</span>
                   </div>
-                  
+
                   <div className="flex items-center gap-2">
                     <Clock className="h-5 w-5 text-gray-500" />
                     <span className="font-medium">Fin des inscriptions:</span>
@@ -207,10 +263,10 @@ export default function TournamentDetail({ params: { id } }: { params: { id: str
                       {tournament.teams.map((team) => (
                         <TableRow key={team.id}>
                           <TableCell className="font-medium">{team.teamName}</TableCell>
-                          <TableCell>{team.captain}</TableCell>
+                          <TableCell>{team.captain.email}</TableCell>
                           <TableCell>
                             <div className="space-y-1">
-                              {team.players.map((player, index) => (
+                              {team.players.map((player: Player, index: number) => (
                                 <div key={index} className="text-sm text-gray-600">
                                   <span className="font-medium">{player.playerName}</span>
                                   <br />
@@ -253,7 +309,7 @@ export default function TournamentDetail({ params: { id } }: { params: { id: str
                     <p><strong>Joueurs par équipe:</strong> {tournament.playersPerTeam}</p>
                     <p><strong>Fin des inscriptions:</strong> {new Date(tournament.registrationDeadline).toLocaleDateString('fr-FR')}</p>
                   </div>
-                  
+
                   {canRegister && isRegistrationOpen ? (
                     <Button asChild className="w-full">
                       <Link href={`/tournaments/${tournament.id}/register`}>
@@ -263,7 +319,7 @@ export default function TournamentDetail({ params: { id } }: { params: { id: str
                   ) : (
                     <div className="text-center">
                       <p className="text-gray-500 mb-2">
-                        {!isRegistrationOpen 
+                        {!isRegistrationOpen
                           ? "Les inscriptions sont fermées"
                           : tournament.teams.length >= tournament.maxTeams
                           ? "Tournoi complet"

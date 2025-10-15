@@ -66,59 +66,44 @@ export default function Home() {
     const fetchTournaments = async () => {
       try {
         setLoading(true)
-        // TODO: Replace with actual API call
-        // const response = await fetch('/api/tournaments')
-        // const data = await response.json()
-        
-        // Mock data for now
-        const mockData: Tournament[] = [
-          {
-            id: "1",
-            title: "League of Legends Championship",
-            description: "Join the ultimate League of Legends tournament!",
-            game: "League of Legends",
-            playersPerTeam: 5,
-            maxTeams: 16,
-            startDate: "2024-12-15T10:00:00Z",
-            endDate: "2024-12-15T18:00:00Z",
-            registrationDeadline: "2024-12-10T23:59:59Z",
-            status: "open",
-            image: null,
-            teamsCount: 8,
-          },
-          {
-            id: "2",
-            title: "Valorant Masters",
-            description: "Compete in the Valorant Masters tournament",
-            game: "Valorant",
-            playersPerTeam: 5,
-            maxTeams: 8,
-            startDate: "2024-12-20T14:00:00Z",
-            endDate: "2024-12-20T22:00:00Z",
-            registrationDeadline: "2024-12-15T23:59:59Z",
-            status: "open",
-            image: null,
-            teamsCount: 3,
-          },
-          {
-            id: "3",
-            title: "CS2 Solo Tournament",
-            description: "Individual CS2 tournament for solo players",
-            game: "Counter-Strike 2",
-            playersPerTeam: 1,
-            maxTeams: 32,
-            startDate: "2024-12-25T12:00:00Z",
-            endDate: "2024-12-25T20:00:00Z",
-            registrationDeadline: "2024-12-20T23:59:59Z",
-            status: "draft",
-            image: null,
-            teamsCount: 0,
-          },
-        ]
-        
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        setTournaments(mockData)
+        const response = await fetch('/api/tournaments')
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch tournaments')
+        }
+
+        const data = await response.json()
+
+        // Transform data to match frontend interface
+        const transformedData: Tournament[] = data.map((tournament: {
+          id: string
+          title: string
+          description: string | null
+          game: string
+          playersPerTeam: number
+          maxTeams: number
+          startDate: string
+          endDate: string
+          registrationDeadline: string
+          status: string
+          image: string | null
+          teams?: unknown[]
+        }) => ({
+          id: tournament.id,
+          title: tournament.title,
+          description: tournament.description || '',
+          game: tournament.game,
+          playersPerTeam: tournament.playersPerTeam,
+          maxTeams: tournament.maxTeams,
+          startDate: tournament.startDate,
+          endDate: tournament.endDate,
+          registrationDeadline: tournament.registrationDeadline,
+          status: tournament.status.toLowerCase(),
+          image: tournament.image,
+          teamsCount: tournament.teams?.length || 0,
+        }))
+
+        setTournaments(transformedData)
       } catch (err) {
         setError("Erreur lors du chargement des tournois")
         console.error("Error fetching tournaments:", err)

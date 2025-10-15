@@ -69,8 +69,21 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Get user from session/auth
-    // For now, we'll use a mock user ID
-    const mockUserId = 'mock-user-id'
+    // For now, we'll create or get a default user for testing
+    let user = await prisma.user.findFirst({
+      where: { email: 'default@test.com' }
+    })
+
+    if (!user) {
+      // Create a default user if it doesn't exist
+      user = await prisma.user.create({
+        data: {
+          email: 'default@test.com',
+          password: 'hashed-password', // In production, this should be properly hashed
+          role: 'USER',
+        },
+      })
+    }
 
     // Create the team
     const team = await prisma.team.create({
@@ -78,12 +91,17 @@ export async function POST(request: NextRequest) {
         teamName,
         players: players,
         tournamentId,
-        captainId: mockUserId,
+        captainId: user.id,
         status: 'PENDING',
       },
       include: {
         tournament: true,
-        captain: true,
+        captain: {
+          select: {
+            id: true,
+            email: true,
+          },
+        },
       },
     })
 

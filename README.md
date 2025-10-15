@@ -77,44 +77,34 @@ Une plateforme complète pour l'inscription aux tournois de jeux vidéo, constru
 
 ## Déploiement sur Vercel
 
-### 1. Préparer le projet
+📚 **[Guide de Déploiement Complet](./DEPLOYMENT.md)**
 
-1. **Créer un compte Vercel** et connecter votre repository GitHub
+Pour un guide détaillé étape par étape, consultez le fichier **DEPLOYMENT.md**.
 
-2. **Configurer Vercel Postgres**
-   - Aller dans le dashboard Vercel
-   - Créer une nouvelle base de données Postgres
-   - Copier l'URL de connexion
+### Résumé Rapide
 
-3. **Configurer Vercel Blob Storage**
-   - Aller dans Storage > Blob
-   - Créer un nouveau bucket
-   - Copier le token d'accès
+1. **Créer un projet Vercel** et connecter votre repository GitHub
+2. **Configurer Vercel Postgres** dans Storage → Create Database → Postgres
+3. **Définir les variables d'environnement** (voir `.env.example`)
+4. **Push sur GitHub** - Déploiement automatique
+5. **Appliquer le schéma Prisma**: `vercel env pull && npx prisma db push`
+6. **Créer un admin**: Visiter `https://your-app.vercel.app/admin`
 
-### 2. Variables d'environnement Vercel
+### Variables d'Environnement Requises
 
-Dans les paramètres du projet Vercel, ajouter:
+Consultez `.env.example` pour la liste complète. Les essentielles:
 
 ```env
-DATABASE_URL="postgresql://..."
-PAYLOAD_SECRET="your-secret-key-here"
+DATABASE_URL="postgresql://..."                    # Vercel Postgres
+PAYLOAD_SECRET="..."                               # Min 32 caractères
 NEXT_PUBLIC_SERVER_URL="https://your-app.vercel.app"
-BLOB_READ_WRITE_TOKEN="your-vercel-blob-token"
+BLOB_READ_WRITE_TOKEN="..."                        # Optionnel
 ```
 
-### 3. Déployer
-
-1. **Push sur GitHub** - Vercel déploiera automatiquement
-
-2. **Appliquer les migrations Prisma**
-   ```bash
-   # Dans le terminal Vercel ou local avec DATABASE_URL de production
-   npx prisma db push
-   ```
-
-3. **Créer le premier utilisateur admin**
-   - Aller sur `https://your-app.vercel.app/admin`
-   - Créer un compte administrateur
+Générer `PAYLOAD_SECRET`:
+```bash
+openssl rand -base64 32
+```
 
 ## Structure du projet
 
