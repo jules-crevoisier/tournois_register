@@ -92,11 +92,12 @@ async function notifyPaperclip(payload: PaperclipErrorPayload): Promise<void> {
  * Safely extract header value from request headers
  */
 function getHeaderValue(
-  headers: Record<string, string | string[]> | undefined,
+  headers: Record<string, string | string[] | undefined> | undefined,
   key: string
 ): string | undefined {
   if (!headers) return undefined;
   const value = headers[key];
+  if (value === undefined) return undefined;
   if (Array.isArray(value)) return value[0];
   return value;
 }
