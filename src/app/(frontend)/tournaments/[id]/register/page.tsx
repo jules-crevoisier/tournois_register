@@ -1,10 +1,11 @@
 "use client"
 
-import RegistrationForm from "@/components/RegistrationForm"
 import { useEffect, useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import RegistrationForm from "@/components/RegistrationForm"
 
 interface Tournament {
   id: string
@@ -36,7 +37,7 @@ export default function TournamentRegister({ params }: { params: Promise<{ id: s
         const response = await fetch(`/api/tournaments/${tournamentId}`)
 
         if (!response.ok) {
-          throw new Error('Failed to fetch tournament')
+          throw new Error("Failed to fetch tournament")
         }
 
         const data = await response.json()
@@ -61,10 +62,10 @@ export default function TournamentRegister({ params }: { params: Promise<{ id: s
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto" />
+          <p className="mt-4 text-muted-foreground">Chargement...</p>
         </div>
       </div>
     )
@@ -72,15 +73,18 @@ export default function TournamentRegister({ params }: { params: Promise<{ id: s
 
   if (error || !tournament) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Card className="max-w-md">
+      <div className="min-h-[60vh] flex items-center justify-center px-4">
+        <Card className="max-w-md w-full">
           <CardHeader>
             <CardTitle>Erreur</CardTitle>
-            <CardDescription>{error || "Tournoi introuvable"}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild>
-              <Link href="/">Retour à l&apos;accueil</Link>
+            <p className="text-muted-foreground mb-4">{error || "Tournoi introuvable"}</p>
+            <Button asChild className="w-full min-h-[44px]">
+              <Link href="/tournaments">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Retour aux tournois
+              </Link>
             </Button>
           </CardContent>
         </Card>
