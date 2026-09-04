@@ -3,11 +3,52 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ================================================================
+   ESPORT DESIGN SYSTEM - Clean Professional Style
+   ================================================================
+   Inspired by FACEIT/Start.gg: clean, professional, no neon effects.
+   Dark mode by default with excellent contrast.
+   Mobile-first: base 320px, breakpoints at 768, 1024, 1440.
+   ================================================================ */
+
 @theme inline {
+  /* Core semantic colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Accent colors - professional tones */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+
+  /* Status colors */
+  --color-status-open: var(--status-open);
+  --color-status-closed: var(--status-closed);
+  --color-status-ongoing: var(--status-ongoing);
+  --color-status-finished: var(--status-finished);
+  --color-status-draft: var(--status-draft);
+
+  /* Component tokens */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-hover: var(--card-hover);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Sidebar tokens */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -16,107 +57,417 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+
+  /* Chart colors */
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
+
+  /* Radius tokens */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ================================================================
+   DARK MODE (DEFAULT) - Clean Professional Style
+   Deep charcoal backgrounds with strategic accent colors
+   ================================================================ */
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --radius: 0.5rem;
+
+  /* Professional accent palette (muted, not flashy) */
+  --accent-primary: oklch(0.65 0.12 220);     /* Muted blue */
+  --accent-secondary: oklch(0.55 0.08 280);   /* Subtle purple */
+
+  /* Tournament status colors - clear semantic meaning */
+  --status-open: oklch(0.65 0.16 145);        /* Green - registrations open */
+  --status-closed: oklch(0.55 0.14 25);       /* Red - closed */
+  --status-ongoing: oklch(0.60 0.14 250);     /* Blue - in progress */
+  --status-finished: oklch(0.50 0.02 260);    /* Gray - completed */
+  --status-draft: oklch(0.60 0.10 85);        /* Yellow/amber - draft */
+
+  /* Dark theme base - professional charcoal */
+  --background: oklch(0.13 0.01 260);
+  --foreground: oklch(0.93 0.01 260);
+
+  /* Card with subtle depth */
+  --card: oklch(0.17 0.01 260);
+  --card-foreground: oklch(0.93 0.01 260);
+  --card-hover: oklch(0.20 0.01 260);
+
+  /* Popover */
+  --popover: oklch(0.19 0.01 260);
+  --popover-foreground: oklch(0.93 0.01 260);
+
+  /* Primary: Clean blue accent */
+  --primary: oklch(0.65 0.12 220);
+  --primary-foreground: oklch(0.98 0 0);
+
+  /* Secondary: Muted surface */
+  --secondary: oklch(0.24 0.02 260);
+  --secondary-foreground: oklch(0.88 0.01 260);
+
+  /* Muted surfaces */
+  --muted: oklch(0.22 0.01 260);
+  --muted-foreground: oklch(0.60 0.01 260);
+
+  /* Accent: Subtle highlight */
+  --accent: oklch(0.26 0.02 260);
+  --accent-foreground: oklch(0.93 0.01 260);
+
+  /* Destructive: Clear red */
+  --destructive: oklch(0.55 0.18 25);
+
+  /* Borders and inputs - subtle but visible */
+  --border: oklch(0.28 0.01 260);
+  --input: oklch(0.22 0.01 260);
+  --ring: oklch(0.65 0.12 220);
+
+  /* Chart colors - professional palette */
+  --chart-1: oklch(0.65 0.12 220);
+  --chart-2: oklch(0.60 0.14 145);
+  --chart-3: oklch(0.55 0.08 280);
+  --chart-4: oklch(0.60 0.12 50);
+  --chart-5: oklch(0.55 0.14 25);
+
+  /* Sidebar */
+  --sidebar: oklch(0.15 0.01 260);
+  --sidebar-foreground: oklch(0.88 0.01 260);
+  --sidebar-primary: oklch(0.65 0.12 220);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.22 0.01 260);
+  --sidebar-accent-foreground: oklch(0.88 0.01 260);
+  --sidebar-border: oklch(0.26 0.01 260);
+  --sidebar-ring: oklch(0.65 0.12 220);
+
+  /* Rank colors */
+  --rank-gold: oklch(0.75 0.14 85);
+  --rank-silver: oklch(0.70 0.02 260);
+  --rank-bronze: oklch(0.60 0.10 55);
+}
+
+/* ================================================================
+   LIGHT MODE
+   Clean whites with professional accent colors
+   ================================================================ */
+.light {
+  --background: oklch(0.98 0.005 260);
+  --foreground: oklch(0.15 0.01 260);
+
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.15 0.01 260);
+  --card-hover: oklch(0.97 0.005 260);
+
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --popover-foreground: oklch(0.15 0.01 260);
+
+  /* Primary: Darker blue for contrast */
+  --primary: oklch(0.45 0.14 220);
+  --primary-foreground: oklch(0.98 0 0);
+
+  --secondary: oklch(0.95 0.01 260);
+  --secondary-foreground: oklch(0.20 0.01 260);
+
+  --muted: oklch(0.95 0.01 260);
+  --muted-foreground: oklch(0.45 0.01 260);
+
+  --accent: oklch(0.96 0.005 260);
+  --accent-foreground: oklch(0.15 0.01 260);
+
+  --destructive: oklch(0.50 0.18 25);
+
+  --border: oklch(0.90 0.005 260);
+  --input: oklch(0.92 0.005 260);
+  --ring: oklch(0.45 0.14 220);
+
+  /* Status colors - adjusted for light mode contrast */
+  --status-open: oklch(0.50 0.16 145);
+  --status-closed: oklch(0.50 0.16 25);
+  --status-ongoing: oklch(0.50 0.14 250);
+  --status-finished: oklch(0.50 0.02 260);
+  --status-draft: oklch(0.55 0.12 85);
+
+  /* Sidebar */
+  --sidebar: oklch(0.98 0.005 260);
+  --sidebar-foreground: oklch(0.15 0.01 260);
+  --sidebar-primary: oklch(0.45 0.14 220);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.95 0.01 260);
+  --sidebar-accent-foreground: oklch(0.20 0.01 260);
+  --sidebar-border: oklch(0.90 0.005 260);
+  --sidebar-ring: oklch(0.45 0.14 220);
+
+  /* Rank colors */
+  --rank-gold: oklch(0.65 0.14 85);
+  --rank-silver: oklch(0.60 0.02 260);
+  --rank-bronze: oklch(0.55 0.10 55);
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-}
-
+/* ================================================================
+   BASE STYLES
+   ================================================================ */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
+  html {
+    /* Dark mode by default */
+    color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Mobile-first: ensure minimum font size for inputs (iOS zoom prevention) */
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* ================================================================
+   UTILITY CLASSES
+   ================================================================ */
+@layer utilities {
+  /* Skeleton loading - subtle shimmer */
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--muted) 25%,
+      var(--card-hover) 50%,
+      var(--muted) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  }
+
+  @keyframes skeleton-shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+
+  /* Tap target sizing for mobile (minimum 44px) */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-area-inset {
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  /* Prevent horizontal overflow on mobile */
+  .overflow-safe {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  /* Focus visible ring - accessibility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+/* ================================================================
+   COMPONENT STYLES - Clean Professional Esport Theme
+   ================================================================ */
+@layer components {
+  /* Status badge - clean without glow */
+  .badge-status {
+    @apply inline-flex items-center justify-center rounded-md px-2.5 py-0.5 text-xs font-medium;
+    @apply border transition-colors duration-200;
+  }
+
+  .badge-status-open {
+    background: oklch(from var(--status-open) l c h / 0.15);
+    color: var(--status-open);
+    border-color: oklch(from var(--status-open) l c h / 0.3);
+  }
+
+  .badge-status-closed {
+    background: oklch(from var(--status-closed) l c h / 0.15);
+    color: var(--status-closed);
+    border-color: oklch(from var(--status-closed) l c h / 0.3);
+  }
+
+  .badge-status-ongoing {
+    background: oklch(from var(--status-ongoing) l c h / 0.15);
+    color: var(--status-ongoing);
+    border-color: oklch(from var(--status-ongoing) l c h / 0.3);
+  }
+
+  .badge-status-finished {
+    background: oklch(from var(--status-finished) l c h / 0.15);
+    color: var(--status-finished);
+    border-color: oklch(from var(--status-finished) l c h / 0.3);
+  }
+
+  .badge-status-draft {
+    background: oklch(from var(--status-draft) l c h / 0.15);
+    color: var(--status-draft);
+    border-color: oklch(from var(--status-draft) l c h / 0.3);
+  }
+
+  /* Tournament card - clean hover, no glow */
+  .tournament-card {
+    @apply relative overflow-hidden rounded-lg border border-border bg-card;
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .tournament-card:hover {
+    @apply border-primary/60 bg-card-hover;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px oklch(0 0 0 / 0.15);
+  }
+
+  /* Rank display - professional medals */
+  .rank-badge {
+    @apply inline-flex items-center justify-center size-8 rounded-full font-semibold text-sm;
+  }
+
+  .rank-1 {
+    background: var(--rank-gold);
+    color: oklch(0.15 0.01 85);
+  }
+
+  .rank-2 {
+    background: var(--rank-silver);
+    color: oklch(0.15 0.01 260);
+  }
+
+  .rank-3 {
+    background: var(--rank-bronze);
+    color: oklch(0.15 0.01 55);
+  }
+
+  .rank-default {
+    @apply bg-muted text-muted-foreground;
+  }
+
+  /* Countdown timer - clean segments */
+  .countdown-segment {
+    @apply flex flex-col items-center justify-center rounded-md bg-card border border-border;
+    @apply min-w-[56px] p-2 sm:min-w-[64px] sm:p-3;
+  }
+
+  .countdown-value {
+    @apply text-xl font-semibold text-foreground tabular-nums sm:text-2xl;
+  }
+
+  .countdown-label {
+    @apply text-[10px] text-muted-foreground uppercase tracking-wider sm:text-xs;
+  }
+
+  /* Player avatar with rank */
+  .player-avatar {
+    @apply relative inline-flex;
+  }
+
+  .player-avatar-image {
+    @apply size-10 rounded-full border-2 border-border object-cover;
+  }
+
+  .player-avatar-rank {
+    @apply absolute -bottom-1 -right-1 size-5 rounded-full text-[10px] font-semibold;
+    @apply flex items-center justify-center border-2 border-background;
+  }
+
+  /* Match card - clean professional style */
+  .match-card {
+    @apply flex items-center justify-between gap-4 rounded-lg border border-border bg-card p-4;
+    @apply transition-colors duration-200;
+  }
+
+  .match-card:hover {
+    @apply border-border bg-card-hover;
+  }
+
+  .match-team {
+    @apply flex items-center gap-3;
+  }
+
+  .match-score {
+    @apply text-2xl font-semibold tabular-nums;
+  }
+
+  .match-score-winner {
+    @apply text-foreground;
+  }
+
+  .match-score-loser {
+    @apply text-muted-foreground;
+  }
+
+  /* Live indicator */
+  .live-indicator {
+    @apply inline-flex items-center gap-1.5 text-xs font-medium;
+    color: var(--status-closed);
+  }
+
+  .live-indicator::before {
+    content: '';
+    @apply size-2 rounded-full animate-pulse;
+    background: var(--status-closed);
+  }
+
+  /* Bracket connector lines */
+  .bracket-line {
+    @apply border-border;
+  }
+
+  .bracket-line-active {
+    @apply border-primary;
+  }
+
+  /* Progress bar for capacity */
+  .progress-bar {
+    @apply h-1.5 w-full rounded-full bg-muted overflow-hidden;
+  }
+
+  .progress-bar-fill {
+    @apply h-full rounded-full transition-all duration-300;
+  }
+
+  .progress-bar-fill-low {
+    background: var(--status-open);
+  }
+
+  .progress-bar-fill-medium {
+    background: var(--status-draft);
+  }
+
+  .progress-bar-fill-high {
+    background: var(--status-closed);
+  }
+
+  /* Table row hover */
+  .table-row-interactive {
+    @apply transition-colors duration-150;
+  }
+
+  .table-row-interactive:hover {
+    @apply bg-muted/50;
+  }
+
+  /* Card image overlay */
+  .card-image-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent;
   }
 }

@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,63 +10,160 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  password  String
-  role      UserRole @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  // Relations
-  createdTournaments Tournament[]
-  teams              Team[]
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          UserRole  @default(PLAYER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // NextAuth relations
+  accounts Account[]
+  sessions Session[]
+
+  // App relations
+  createdTournaments  Tournament[]
+  teams               Team[]
+  tournamentAdmins    TournamentAdmin[]
 
   @@map("users")
 }
 
 model Tournament {
-  id                  String            @id @default(cuid())
-  title               String
-  description         String?
-  game                String
-  playersPerTeam      Int
-  maxTeams            Int
-  startDate           DateTime
-  endDate             DateTime
+  id                   String           @id @default(cuid())
+  title                String
+  description          String?
+  game                 String
+  mode                 TournamentMode   @default(SINGLE_ELIMINATION)
+  playersPerTeam       Int
+  maxTeams             Int
+  startDate            DateTime
+  endDate              DateTime
   registrationDeadline DateTime
-  status              TournamentStatus   @default(DRAFT)
-  image               String?           // Vercel Blob URL
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
+  status               TournamentStatus @default(DRAFT)
+  image                String?          // Vercel Blob URL
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
 
   // Relations
   createdById String
-  createdBy   User   @relation(fields: [createdById], references: [id])
+  createdBy   User              @relation(fields: [createdById], references: [id])
   teams       Team[]
+  admins      TournamentAdmin[]
+  matches     Match[]
 
   @@map("tournaments")
 }
 
+// Per-tournament admin permissions
+model TournamentAdmin {
+  id           String                @id @default(cuid())
+  userId       String
+  tournamentId String
+  permission   TournamentPermission  @default(MANAGE_TEAMS)
+  createdAt    DateTime              @default(now())
+
+  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tournamentId])
+  @@map("tournament_admins")
+}
+
 model Team {
-  id          String     @id @default(cuid())
-  teamName    String
-  players     Json       // Array of player objects
-  registeredAt DateTime  @default(now())
-  status      TeamStatus @default(PENDING)
+  id           String     @id @default(cuid())
+  teamName     String
+  players      Json       // Array of player objects
+  registeredAt DateTime   @default(now())
+  status       TeamStatus @default(PENDING)
 
   // Relations
   tournamentId String
   tournament   Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   captainId    String
-  captain      User      @relation(fields: [captainId], references: [id])
+  captain      User       @relation(fields: [captainId], references: [id])
+  matchesHome  Match[]    @relation("HomeTeam")
+  matchesAway  Match[]    @relation("AwayTeam")
+  matchesWon   Match[]    @relation("WinnerTeam")
 
   @@map("teams")
 }
 
+// For bracket management
+model Match {
+  id           String      @id @default(cuid())
+  round        Int
+  matchNumber  Int
+  homeTeamId   String?
+  awayTeamId   String?
+  homeScore    Int?
+  awayScore    Int?
+  winnerId     String?
+  status       MatchStatus @default(PENDING)
+  scheduledAt  DateTime?
+  playedAt     DateTime?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relations
+  tournamentId String
+  tournament   Tournament  @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  homeTeam     Team?       @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam     Team?       @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  winner       Team?       @relation("WinnerTeam", fields: [winnerId], references: [id])
+
+  @@unique([tournamentId, round, matchNumber])
+  @@map("matches")
+}
+
 enum UserRole {
   ADMIN
-  USER
+  ORGANIZER
+  PLAYER
 }
 
 enum TournamentStatus {
@@ -84,4 +178,25 @@ enum TeamStatus {
   PENDING
   CONFIRMED
   CANCELLED
+}
+
+enum MatchStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TournamentMode {
+  SINGLE_ELIMINATION
+  DOUBLE_ELIMINATION
+  ROUND_ROBIN
+  SWISS
+}
+
+enum TournamentPermission {
+  FULL_ACCESS
+  MANAGE_TEAMS
+  MANAGE_MATCHES
+  VIEW_ONLY
 }
