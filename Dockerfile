@@ -1,11 +1,11 @@
 # Multi-stage build for minimal image size
-# Stage 1: Dependencies
+# Stage 1: Dependencies (all deps for building)
 FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 # Stage 2: Builder
 FROM node:20-alpine AS builder
