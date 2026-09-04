@@ -12,7 +12,7 @@ test.describe('Tournament Registration', () => {
       await page.getByLabel(/email/i).fill(email)
       await page.getByLabel(/^mot de passe$/i).fill(testUsers.player.password)
       await page.getByLabel(/confirmer/i).fill(testUsers.player.password)
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
       await expect(page).toHaveURL('/', { timeout: 15000 })
     })
 

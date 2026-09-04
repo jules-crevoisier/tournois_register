@@ -50,8 +50,10 @@ export default defineConfig({
   ],
 
   /* Run local dev server before starting tests */
+  /* Use webpack mode (dev:webpack) instead of Turbopack to avoid Windows MAX_PATH issues
+     when the project is in a deeply nested directory like Paperclip workspaces */
   webServer: {
-    command: 'npm run dev',
+    command: 'npm run dev:webpack',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120000,

@@ -11,7 +11,8 @@ test.describe('Authentication', () => {
 
       // Verify we're on the registration page
       await expect(page.getByRole('heading', { name: /inscription/i })).toBeVisible()
-      await expect(page.getByRole('heading', { name: /créer un compte/i })).toBeVisible()
+      // CardTitle is a div, not a heading, so use getByText instead
+      await expect(page.getByText(/creer un compte/i).first()).toBeVisible()
 
       // Fill the registration form
       await page.getByLabel(/nom/i).fill('New Test User')
@@ -20,7 +21,7 @@ test.describe('Authentication', () => {
       await page.getByLabel(/confirmer/i).fill(password)
 
       // Submit the form
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
 
       // Should redirect to homepage after successful registration
       await expect(page).toHaveURL('/', { timeout: 15000 })
@@ -36,7 +37,7 @@ test.describe('Authentication', () => {
       await page.getByLabel(/email/i).fill(email)
       await page.getByLabel(/^mot de passe$/i).fill(password)
       await page.getByLabel(/confirmer/i).fill(password)
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
       await expect(page).toHaveURL('/', { timeout: 15000 })
 
       // Now try to register with the same email
@@ -45,10 +46,10 @@ test.describe('Authentication', () => {
       await page.getByLabel(/email/i).fill(email)
       await page.getByLabel(/^mot de passe$/i).fill(password)
       await page.getByLabel(/confirmer/i).fill(password)
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
 
       // Should show error message
-      await expect(page.getByText(/existe déjà/i)).toBeVisible({ timeout: 5000 })
+      await expect(page.getByText(/existe deja/i)).toBeVisible({ timeout: 5000 })
     })
 
     test('should show error for password mismatch', async ({ page }) => {
@@ -58,7 +59,7 @@ test.describe('Authentication', () => {
       await page.getByLabel(/email/i).fill(generateTestEmail())
       await page.getByLabel(/^mot de passe$/i).fill('Password123!')
       await page.getByLabel(/confirmer/i).fill('DifferentPassword123!')
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
 
       await expect(page.getByText(/ne correspondent pas/i)).toBeVisible()
     })
@@ -70,9 +71,9 @@ test.describe('Authentication', () => {
       await page.getByLabel(/email/i).fill(generateTestEmail())
       await page.getByLabel(/^mot de passe$/i).fill('short')
       await page.getByLabel(/confirmer/i).fill('short')
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
 
-      await expect(page.getByText(/8 caractères/i)).toBeVisible()
+      await expect(page.getByText(/8 caracteres/i)).toBeVisible()
     })
   })
 
@@ -86,7 +87,7 @@ test.describe('Authentication', () => {
       await page.getByLabel(/email/i).fill(email)
       await page.getByLabel(/^mot de passe$/i).fill(testUsers.player.password)
       await page.getByLabel(/confirmer/i).fill(testUsers.player.password)
-      await page.getByRole('button', { name: /créer/i }).click()
+      await page.getByRole('button', { name: /creer/i }).click()
       await expect(page).toHaveURL('/', { timeout: 15000 })
 
       // Log out (go to homepage and assume logout)
@@ -133,7 +134,7 @@ test.describe('Authentication', () => {
     test('should navigate to registration page from login', async ({ page }) => {
       await page.goto('/login')
 
-      await page.getByRole('link', { name: /créer un compte/i }).click()
+      await page.getByRole('link', { name: /creer un compte/i }).click()
 
       await expect(page).toHaveURL('/register')
     })

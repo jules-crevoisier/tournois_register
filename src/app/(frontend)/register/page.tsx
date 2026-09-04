@@ -59,8 +59,8 @@ export default function Register() {
       if (signInResult?.error) {
         router.push("/login")
       } else {
-        router.push("/")
-        router.refresh()
+        // Use window.location for reliable redirect after auth state change
+        window.location.href = "/"
       }
     } catch {
       setError("Une erreur est survenue")
